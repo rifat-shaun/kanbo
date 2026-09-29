@@ -15,7 +15,7 @@ export interface ThemeContextValue {
 export const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 export function useTheme() {
-  const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used inside <ThemeProvider>')
-  return ctx
+  const themeContext = useContext(ThemeContext)
+  if (!themeContext) throw new Error('useTheme must be used inside <ThemeProvider>')
+  return themeContext
 }

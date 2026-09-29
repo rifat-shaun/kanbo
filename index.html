@@ -7,9 +7,13 @@
     <title>Kanbo</title>
     <script>
       // Set the theme before first paint to avoid a flash. Mirrors ThemeProvider.
-      (function () {
+      (function applyInitialTheme() {
         var theme = 'system'
-        try { theme = localStorage.getItem('kanbo-theme') || 'system' } catch (e) {}
+        try {
+          theme = localStorage.getItem('kanbo-theme') || 'system'
+        } catch (storageError) {
+          // Storage can be unavailable; fall back to the system theme.
+        }
         if (theme !== 'light' && theme !== 'dark') {
           theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
         }

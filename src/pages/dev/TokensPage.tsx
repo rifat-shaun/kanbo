@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { cn } from '../../lib/cn'
+import { mergeClassNames } from '../../lib/mergeClassNames'
 import { useTheme, type Theme } from '../../theme/ThemeContext'
 
 // Class names are written out in full so Tailwind can see them.
-const groups: { title: string; swatches: { name: string; className: string }[] }[] = [
+const COLOR_GROUPS: { title: string; swatches: { name: string; className: string }[] }[] = [
   {
     title: 'Surfaces',
     swatches: [
@@ -48,7 +48,7 @@ const groups: { title: string; swatches: { name: string; className: string }[] }
   },
 ]
 
-const labels = [
+const LABEL_SWATCHES = [
   { hue: 'gray', pill: 'bg-label-gray-bg text-label-gray-fg', dot: 'bg-label-gray-fg' },
   { hue: 'red', pill: 'bg-label-red-bg text-label-red-fg', dot: 'bg-label-red-fg' },
   { hue: 'orange', pill: 'bg-label-orange-bg text-label-orange-fg', dot: 'bg-label-orange-fg' },
@@ -60,7 +60,7 @@ const labels = [
   { hue: 'pink', pill: 'bg-label-pink-bg text-label-pink-fg', dot: 'bg-label-pink-fg' },
 ]
 
-const typeScale = [
+const TYPE_SCALE = [
   { name: '2xl', className: 'text-2xl font-semibold', use: 'Hero' },
   { name: 'xl', className: 'text-xl font-semibold', use: 'Page titles' },
   { name: 'lg', className: 'text-lg font-semibold', use: 'Card detail title' },
@@ -73,28 +73,32 @@ const typeScale = [
   { name: '3xs', className: 'text-3xs font-mono', use: 'Kbd' },
 ]
 
-function toHex(color: string) {
-  const m = color.match(/rgba?\(([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)(?:\s*[/,]\s*([\d.]+))?\)/)
-  if (!m) return color
-  const hex = [m[1], m[2], m[3]].map((n) => Math.round(Number(n)).toString(16).padStart(2, '0')).join('')
-  const alpha = m[4] !== undefined && Number(m[4]) < 1 ? ` / ${Math.round(Number(m[4]) * 100)}%` : ''
-  return `#${hex.toUpperCase()}${alpha}`
+/** Converts a computed `rgb()`/`rgba()` color into `#RRGGBB`, with the alpha as a percentage when translucent. */
+function rgbToHex(rgbColor: string) {
+  const rgbMatch = rgbColor.match(/rgba?\(([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)(?:\s*[/,]\s*([\d.]+))?\)/)
+  if (!rgbMatch) return rgbColor
+  const [, red, green, blue, alpha] = rgbMatch
+  const hex = [red, green, blue]
+    .map((channel) => Math.round(Number(channel)).toString(16).padStart(2, '0'))
+    .join('')
+  const alphaSuffix = alpha !== undefined && Number(alpha) < 1 ? ` / ${Math.round(Number(alpha) * 100)}%` : ''
+  return `#${hex.toUpperCase()}${alphaSuffix}`
 }
 
 function Swatch({ name, className }: { name: string; className: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [value, setValue] = useState('')
+  const swatchRef = useRef<HTMLDivElement>(null)
+  const [resolvedColor, setResolvedColor] = useState('')
 
   useLayoutEffect(() => {
-    if (ref.current) setValue(toHex(getComputedStyle(ref.current).backgroundColor))
+    if (swatchRef.current) setResolvedColor(rgbToHex(getComputedStyle(swatchRef.current).backgroundColor))
   }, [])
 
   return (
     <div className="flex items-center gap-2">
-      <div ref={ref} className={cn('size-8 shrink-0 rounded-control border border-border', className)} />
+      <div ref={swatchRef} className={mergeClassNames('size-8 shrink-0 rounded-control border border-border', className)} />
       <div className="min-w-0">
         <div className="text-xs font-medium text-fg">{name}</div>
-        <div className="font-mono text-2xs text-fg-3">{value}</div>
+        <div className="font-mono text-2xs text-fg-3">{resolvedColor}</div>
       </div>
     </div>
   )
@@ -109,12 +113,12 @@ function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
     <section data-theme={theme} className="flex min-w-0 flex-col gap-6 rounded-card border border-border bg-bg p-4 text-fg">
       <h2 className="text-md font-semibold capitalize">{theme}</h2>
 
-      {groups.map((group) => (
+      {COLOR_GROUPS.map((group) => (
         <div key={group.title} className="flex flex-col gap-2">
           <SectionLabel>{group.title}</SectionLabel>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {group.swatches.map((s) => (
-              <Swatch key={s.name} {...s} />
+            {group.swatches.map((swatch) => (
+              <Swatch key={swatch.name} {...swatch} />
             ))}
           </div>
         </div>
@@ -123,17 +127,17 @@ function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
       <div className="flex flex-col gap-2">
         <SectionLabel>Labels</SectionLabel>
         <div className="flex flex-wrap gap-1">
-          {labels.map((l) => (
-            <span key={l.hue} className={cn('rounded-full px-2 text-2xs font-medium capitalize', l.pill)}>
-              {l.hue}
+          {LABEL_SWATCHES.map((label) => (
+            <span key={label.hue} className={mergeClassNames('rounded-full px-2 text-2xs font-medium capitalize', label.pill)}>
+              {label.hue}
             </span>
           ))}
         </div>
         <div className="flex flex-wrap gap-3">
-          {labels.map((l) => (
-            <span key={l.hue} className="inline-flex items-center gap-1.5 text-xs capitalize text-fg-2">
-              <span className={cn('size-2 rounded-xs', l.dot)} />
-              {l.hue}
+          {LABEL_SWATCHES.map((label) => (
+            <span key={label.hue} className="inline-flex items-center gap-1.5 text-xs capitalize text-fg-2">
+              <span className={mergeClassNames('size-2 rounded-xs', label.dot)} />
+              {label.hue}
             </span>
           ))}
         </div>
@@ -160,7 +164,7 @@ function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
   )
 }
 
-const themeOptions: Theme[] = ['system', 'light', 'dark']
+const THEME_OPTIONS: Theme[] = ['system', 'light', 'dark']
 
 export function TokensPage() {
   const { theme, resolvedTheme, setTheme } = useTheme()
@@ -173,14 +177,14 @@ export function TokensPage() {
           <p className="text-sm text-fg-2">Every color token in both themes, plus the type scale.</p>
         </div>
         <div role="radiogroup" aria-label="Theme" className="flex gap-0.5 rounded-control border border-border bg-surface p-0.5">
-          {themeOptions.map((option) => (
+          {THEME_OPTIONS.map((option) => (
             <button
               key={option}
               type="button"
               role="radio"
               aria-checked={theme === option}
               onClick={() => setTheme(option)}
-              className={cn(
+              className={mergeClassNames(
                 'focus-ring h-6 rounded-xs border border-transparent px-2 text-xs font-medium capitalize text-fg-2 transition-colors hover:bg-surface-2 hover:text-fg',
                 theme === option && 'bg-accent-soft text-accent-text hover:bg-accent-soft hover:text-accent-text',
               )}
@@ -199,11 +203,11 @@ export function TokensPage() {
 
       <section className="flex flex-col gap-3 rounded-card border border-border bg-surface p-4">
         <SectionLabel>Type scale</SectionLabel>
-        {typeScale.map((t) => (
-          <div key={t.name} className="flex items-baseline gap-4 border-b border-border pb-2 last:border-0">
-            <span className="w-14 shrink-0 font-mono text-2xs text-fg-3">{t.name}</span>
-            <span className={cn('min-w-0 flex-1 truncate', t.className)}>Design onboarding v2</span>
-            <span className="hidden shrink-0 text-xs text-fg-3 sm:block">{t.use}</span>
+        {TYPE_SCALE.map((typeStyle) => (
+          <div key={typeStyle.name} className="flex items-baseline gap-4 border-b border-border pb-2 last:border-0">
+            <span className="w-14 shrink-0 font-mono text-2xs text-fg-3">{typeStyle.name}</span>
+            <span className={mergeClassNames('min-w-0 flex-1 truncate', typeStyle.className)}>Design onboarding v2</span>
+            <span className="hidden shrink-0 text-xs text-fg-3 sm:block">{typeStyle.use}</span>
           </div>
         ))}
       </section>
