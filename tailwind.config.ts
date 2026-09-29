@@ -181,7 +181,7 @@ export default {
         pop: 'var(--shadow-pop)',
         focus: '0 0 0 3px rgb(var(--accent-soft) / var(--accent-soft-alpha))',
       },
-      transitionDuration: { fast: '120ms', DEFAULT: '150ms', slow: '180ms' },
+      transitionDuration: { fast: '120ms', DEFAULT: '150ms', slow: '180ms', sidebar: '160ms' },
       transitionTimingFunction: { DEFAULT: 'cubic-bezier(0, 0, .2, 1)', out: 'cubic-bezier(0, 0, .2, 1)' },
       keyframes: {
         'kanbo-shimmer': { '0%': { backgroundPosition: '200% 0' }, '100%': { backgroundPosition: '-200% 0' } },
