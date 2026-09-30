@@ -1,13 +1,17 @@
-import { useParams } from 'react-router'
-import { PageHeader } from '@/modules/app-shell'
+import { Link, useParams } from 'react-router'
 
+// TODO: lists and cards
 export const BoardPage = () => {
-  const { boardId, cardId } = useParams()
+  const { workspaceSlug, boardId, cardId } = useParams()
+
+  if (cardId) return <p className="p-6 text-fg-3">Card {cardId} is open.</p>
 
   return (
-    <>
-      <PageHeader title={`Board ${boardId}`} />
-      {cardId && <p className="p-6 text-fg-3">Card {cardId}</p>}
-    </>
+    <p className="p-6 text-fg-3">
+      Lists go here.{' '}
+      <Link to={`/${workspaceSlug}/b/${boardId}/c/demo-card`} className="text-accent-text hover:underline">
+        Open a demo card
+      </Link>
+    </p>
   )
 }

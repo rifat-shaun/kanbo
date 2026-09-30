@@ -22,12 +22,16 @@ export const Sidebar = ({ className }: { className?: string }) => {
         )}
       >
         {/* TODO: workspace switcher */}
+
         <div
           className={mergeClassNames(
             'h-13 shrink-0 flex items-center px-3 border-b border-border',
-            collapsed ? 'justify-center' : 'justify-end',
+            collapsed ? 'justify-center' : 'justify-between',
           )}
         >
+          <div className={mergeClassNames('text-md-sm font-semibold whitespace-nowrap', collapsed ? 'hidden' : '')}>
+            Northwind Labs
+          </div>
           <button
             type="button"
             onClick={toggleSidebar}

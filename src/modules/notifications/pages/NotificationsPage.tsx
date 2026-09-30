@@ -1,3 +1,1 @@
-import { PageHeader } from '@/modules/app-shell'
-
-export const NotificationsPage = () => <PageHeader title="Notifications" />
+export const NotificationsPage = () => <p className="p-6 text-fg-3">You're all caught up.</p>

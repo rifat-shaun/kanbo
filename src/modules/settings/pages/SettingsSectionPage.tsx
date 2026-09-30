@@ -1,10 +1,9 @@
 import { useParams } from 'react-router'
-import { PageHeader } from '@/modules/app-shell'
+import { getSettingsSectionLabel } from '../data/settingsSections'
 
-const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
-
+// TODO: the actual settings forms
 export const SettingsSectionPage = () => {
-  const { settingsSection = '' } = useParams()
+  const { settingsSection } = useParams()
 
-  return <PageHeader title={capitalize(settingsSection)} />
+  return <p className="p-6 text-fg-3">{getSettingsSectionLabel(settingsSection)} settings go here.</p>
 }

@@ -12,7 +12,7 @@ const readStoredCollapsed = () => {
 
 export const AppShellProvider = ({ children }: { children: ReactNode }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(readStoredCollapsed)
-  const [headerTarget, setHeaderTarget] = useState<HTMLElement | null>(null)
+  const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null)
   const [subBarTarget, setSubBarTarget] = useState<HTMLElement | null>(null)
 
   const toggleSidebar = useCallback(() => setIsSidebarCollapsed((collapsed) => !collapsed), [])
@@ -40,8 +40,8 @@ export const AppShellProvider = ({ children }: { children: ReactNode }) => {
   }, [toggleSidebar])
 
   const value = useMemo(
-    () => ({ isSidebarCollapsed, toggleSidebar, headerTarget, subBarTarget, setHeaderTarget, setSubBarTarget }),
-    [isSidebarCollapsed, toggleSidebar, headerTarget, subBarTarget],
+    () => ({ isSidebarCollapsed, toggleSidebar, actionsTarget, subBarTarget, setActionsTarget, setSubBarTarget }),
+    [isSidebarCollapsed, toggleSidebar, actionsTarget, subBarTarget],
   )
 
   return <AppShellContext.Provider value={value}>{children}</AppShellContext.Provider>

@@ -5,10 +5,10 @@ export const SIDEBAR_COLLAPSED_STORAGE_KEY = 'kanbo-sidebar-collapsed'
 type AppShellContextValue = {
   isSidebarCollapsed: boolean
   toggleSidebar: () => void
-  // DOM nodes inside the top bar that <PageHeader/> portals into
-  headerTarget: HTMLElement | null
+  // DOM nodes in the top bar that <PageActions/> and <PageSubBar/> portal into
+  actionsTarget: HTMLElement | null
   subBarTarget: HTMLElement | null
-  setHeaderTarget: (element: HTMLElement | null) => void
+  setActionsTarget: (element: HTMLElement | null) => void
   setSubBarTarget: (element: HTMLElement | null) => void
 }
 

@@ -1,3 +1,4 @@
 export { AppShell } from './AppShell'
-export { PageHeader, type PageHeaderProps } from './components/top-bar/PageHeader'
+export { PageActions, PageSubBar } from './components/top-bar/PageActions'
 export { useAppShell } from './context/AppShellContext'
+export type { Breadcrumb, BreadcrumbHandle } from './types/breadcrumbs'

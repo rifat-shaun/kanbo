@@ -1,3 +1,2 @@
-import { PageHeader } from '@/modules/app-shell'
-
-export const HomePage = () => <PageHeader title="Northwind Labs" />
+// TODO: recent boards + activity rail
+export const HomePage = () => <p className="p-6 text-fg-3">Your recent boards and activity will show up here.</p>
