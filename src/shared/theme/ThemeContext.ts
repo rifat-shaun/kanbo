@@ -6,7 +6,7 @@ export type ResolvedTheme = 'light' | 'dark'
 // Keep in sync with the pre-paint script in index.html.
 export const THEME_STORAGE_KEY = 'kanbo-theme'
 
-export interface ThemeContextValue {
+type ThemeContextValue = {
   theme: Theme
   resolvedTheme: ResolvedTheme
   setTheme: (theme: Theme) => void
@@ -14,8 +14,9 @@ export interface ThemeContextValue {
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-export function useTheme() {
+export const useTheme = () => {
   const themeContext = useContext(ThemeContext)
   if (!themeContext) throw new Error('useTheme must be used inside <ThemeProvider>')
+
   return themeContext
 }

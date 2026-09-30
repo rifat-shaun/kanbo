@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kanbo</title>
     <script>
-      // Set the theme before first paint to avoid a flash. Mirrors ThemeProvider.
-      (function applyInitialTheme() {
-        var theme = 'system'
+      // Set the theme before first paint so there's no flash. Mirrors ThemeProvider.
+      (() => {
+        let theme = 'system'
         try {
           theme = localStorage.getItem('kanbo-theme') || 'system'
-        } catch (storageError) {
-          // Storage can be unavailable; fall back to the system theme.
+        } catch {
+          // fall back to the system theme
         }
         if (theme !== 'light' && theme !== 'dark') {
           theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'

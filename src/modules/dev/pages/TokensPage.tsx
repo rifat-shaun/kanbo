@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { mergeClassNames } from '../../lib/mergeClassNames'
-import { useTheme, type Theme } from '../../theme/ThemeContext'
+import { mergeClassNames } from '@/shared/utils/mergeClassNames'
+import { useTheme, type Theme } from '@/shared/theme'
 
 // Class names are written out in full so Tailwind can see them.
 const COLOR_GROUPS: { title: string; swatches: { name: string; className: string }[] }[] = [
@@ -73,8 +73,8 @@ const TYPE_SCALE = [
   { name: '3xs', className: 'text-3xs font-mono', use: 'Kbd' },
 ]
 
-/** Converts a computed `rgb()`/`rgba()` color into `#RRGGBB`, with the alpha as a percentage when translucent. */
-function rgbToHex(rgbColor: string) {
+// rgb(99, 102, 241) -> #6366F1, with alpha as a percentage when translucent
+const rgbToHex = (rgbColor: string) => {
   const rgbMatch = rgbColor.match(/rgba?\(([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)(?:\s*[/,]\s*([\d.]+))?\)/)
   if (!rgbMatch) return rgbColor
   const [, red, green, blue, alpha] = rgbMatch
@@ -85,7 +85,7 @@ function rgbToHex(rgbColor: string) {
   return `#${hex.toUpperCase()}${alphaSuffix}`
 }
 
-function Swatch({ name, className }: { name: string; className: string }) {
+const Swatch = ({ name, className }: { name: string; className: string }) => {
   const swatchRef = useRef<HTMLDivElement>(null)
   const [resolvedColor, setResolvedColor] = useState('')
 
@@ -104,11 +104,11 @@ function Swatch({ name, className }: { name: string; className: string }) {
   )
 }
 
-function SectionLabel({ children }: { children: string }) {
-  return <h3 className="text-2xs font-semibold uppercase tracking-label text-fg-3">{children}</h3>
-}
+const SectionLabel = ({ children }: { children: string }) => (
+  <h3 className="text-2xs font-semibold uppercase tracking-label text-fg-3">{children}</h3>
+)
 
-function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
+const ThemePanel = ({ theme }: { theme: 'light' | 'dark' }) => {
   return (
     <section data-theme={theme} className="flex min-w-0 flex-col gap-6 rounded-card border border-border bg-bg p-4 text-fg">
       <h2 className="text-md font-semibold capitalize">{theme}</h2>
@@ -166,7 +166,7 @@ function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
 
 const THEME_OPTIONS: Theme[] = ['system', 'light', 'dark']
 
-export function TokensPage() {
+export const TokensPage = () => {
   const { theme, resolvedTheme, setTheme } = useTheme()
 
   return (
